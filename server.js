@@ -23,10 +23,11 @@ process.on('unhandledRejection', (reason, promise) => {
 });
 
 // ─── Credentials (hardcoded) ───────────────────────────────────────────────
-const ADMIN_USERNAME = 'electropool';
-const ADMIN_PASSWORD = 'DEADpool@005';
+const ADMIN_USERNAME = process.env.ADMIN_USERNAME;
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 // ─── SQLite setup ─────────────────────────────────────────────────────────
+const dbPath = process.env.DB_PATH || join(__dirname, 'visitor_logs.db');
 const db = new Database.Database(join(__dirname, 'visitor_logs.db'), (err) => {
   if (err) {
     console.error('❌ Database connection error:', err.message);
