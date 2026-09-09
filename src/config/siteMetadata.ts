@@ -68,8 +68,13 @@ export const siteMetadata: Metadata = {
   icons: {
     icon: [
       {
+        url: '/favicon.ico',
+        sizes: 'any',
+      },
+      {
         url: '/assets/images/site/favicon.png',
         type: 'image/png',
+        sizes: '512x512',
       },
     ],
 
@@ -77,6 +82,7 @@ export const siteMetadata: Metadata = {
       {
         url: '/assets/images/site/favicon.png',
         type: 'image/png',
+        sizes: '512x512',
       },
     ],
   },
@@ -85,6 +91,4 @@ export const siteMetadata: Metadata = {
     index: true,
     follow: true,
   },
-
-  themeColor: '#080808',
 }
