@@ -12,18 +12,18 @@ interface StickerData {
 }
 
 const STICKER_SRCS = [
-  '/assets/stickers/bulbasaur-pokemon.gif',
-  '/assets/stickers/bee-pixel.webp',
-  '/assets/stickers/mario-dance.webp',
-  '/assets/stickers/minecraft-steve.webp',
-  '/assets/stickers/minecraft-sword.webp',
-  '/assets/stickers/creeper-minecraft.webp',
-  '/assets/stickers/pixel-rabbit-rabbit.webp',
-  '/assets/stickers/16bit-80s.webp',
-  '/assets/stickers/party-fox.webp',
-  '/assets/stickers/hmmm-villiage.webp',
-  '/assets/stickers/sunnykins-sunny-bongo.gif',
-  '/assets/stickers/sigh-bits.webp',
+  '/assets/images/stickers/bulbasaur-pokemon.gif',
+  '/assets/images/stickers/bee-pixel.webp',
+  '/assets/images/stickers/mario-dance.webp',
+  '/assets/images/stickers/minecraft-steve.webp',
+  '/assets/images/stickers/minecraft-sword.webp',
+  '/assets/images/stickers/creeper-minecraft.webp',
+  '/assets/images/stickers/pixel-rabbit-rabbit.webp',
+  '/assets/images/stickers/16bit-80s.webp',
+  '/assets/images/stickers/party-fox.webp',
+  '/assets/images/stickers/hmmm-villiage.webp',
+  '/assets/images/stickers/sunnykins-sunny-bongo.gif',
+  '/assets/images/stickers/sigh-bits.webp',
 ]
 
 // Preload images cache

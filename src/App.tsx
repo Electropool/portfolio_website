@@ -1,3 +1,5 @@
+'use client'
+
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import './App.css'
@@ -6,11 +8,12 @@ import Cursor                from './components/Cursor'
 import LoadingScreen         from './components/LoadingScreen'
 import SideNav               from './components/SideNav'
 import HudOverlay            from './components/HudOverlay'
-import SinglePage            from './pages/SinglePage'
-import ProjectDetailPage     from './pages/ProjectDetailPage'
-import CertDetailPage        from './pages/CertDetailPage'
-import AchievementDetailPage from './pages/AchievementDetailPage'
+import SinglePage            from './views/SinglePage'
+import ProjectDetailPage     from './views/ProjectDetailPage'
+import CertDetailPage        from './views/CertDetailPage'
+import AchievementDetailPage from './views/AchievementDetailPage'
 import type { Project }      from './data/projects'
+import { apiBaseUrl }        from './lib/runtime-config'
 
 export type Section = 'home' | 'personal' | 'projects' | 'certifications' | 'achievements' | 'contacts'
 
@@ -40,7 +43,7 @@ export default function App() {
 
   // Silent visitor tracking (fires once, won't slow down the site)
   useEffect(() => {
-    fetch('/api/track', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' }).catch(() => {})
+    fetch(`${apiBaseUrl}/track`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' }).catch(() => {})
   }, [])
 
   // Initialize Audio Context on first interaction
@@ -53,7 +56,7 @@ export default function App() {
     }
 
     if (!audioRef.current) {
-      const audio = new Audio('/assets/music.mp3')
+      const audio = new Audio('/assets/audio/background-music.mp3')
       audio.loop = true
       audio.volume = 0
       audioRef.current = audio
@@ -206,4 +209,3 @@ export default function App() {
     </>
   )
 }
-

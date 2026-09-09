@@ -10,12 +10,12 @@ export const ACHIEVEMENTS: Achievement[] = [
     date:'2025', badge:'🥇 1ST PRIZE',
     media:[
       {type:'youtube', src:'https://youtu.be/wfWqIEdFU6c?si=NJxJx4ZPuGT0Rdha'},
-      {type:'image',   src:'/assets/achievements/achivments_1_speech_1.jpeg'},
-      {type:'image',   src:'/assets/achievements/achivments_1_speech_2.jpeg'},
-      {type:'image',   src:'/assets/achievements/achivments_1_speech_3.jpeg'},
-      {type:'image',   src:'/assets/achievements/achivments_1_speech_4.jpg'},
-      {type:'image',   src:'/assets/achievements/achivments_1_speech_5.jpg'},
-      {type:'image',   src:'/assets/achievements/achivments_1_speech_6.jpg'},
+      {type:'image',   src:'/assets/images/achievements/achivments_1_speech_1.jpeg'},
+      {type:'image',   src:'/assets/images/achievements/achivments_1_speech_2.jpeg'},
+      {type:'image',   src:'/assets/images/achievements/achivments_1_speech_3.jpeg'},
+      {type:'image',   src:'/assets/images/achievements/achivments_1_speech_4.jpg'},
+      {type:'image',   src:'/assets/images/achievements/achivments_1_speech_5.jpg'},
+      {type:'image',   src:'/assets/images/achievements/achivments_1_speech_6.jpg'},
     ],
   },
   {
@@ -24,8 +24,8 @@ export const ACHIEVEMENTS: Achievement[] = [
     desc:'Participated in the JIS Tech Fest with Project HABR (High Altitude Balloon Relay) — a disaster management concept using high-altitude balloons as emergency communication relays.',
     date:'2026', badge:'🎯 PARTICIPATION',
     media:[
-      {type:'image', src:'/assets/achievements/achivments_2_jistech_1.jpeg'},
-      {type:'image', src:'/assets/achievements/achivments_2_jistech_2.jpeg'},
+      {type:'image', src:'/assets/images/achievements/achivments_2_jistech_1.jpeg'},
+      {type:'image', src:'/assets/images/achievements/achivments_2_jistech_2.jpeg'},
     ],
   },
 ]

@@ -81,7 +81,7 @@ function HeroSection({ playSfx }: { playSfx: (type: any) => void }) {
       {/* Background photo — B&W blurred left */}
       <motion.div style={{ position:'absolute', inset:0, zIndex:0, scale: photoScale, opacity: photoOpacity }}>
         <div style={{ position:'absolute', left:0, top:0, width:'55%', height:'100%', overflow:'hidden' }}>
-          <img src="/assets/photo_new.png" alt=""
+          <img src="/assets/images/profile/photo_new.png" alt=""
             style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'center top',
               filter:'grayscale(1) brightness(0.28) blur(1.5px)',
               maskImage:'linear-gradient(to right, rgba(0,0,0,0.7) 0%, transparent 100%)',
@@ -191,7 +191,7 @@ function PersonalSection({ playSfx }: { playSfx: (type: any) => void }) {
         {/* Photo */}
         <motion.div initial={{opacity:0,x:-20}} whileInView={{opacity:1,x:0}} viewport={{once:true}} transition={{duration:0.55}}>
           <div className="personal-photo-wrapper" style={{position:'relative',borderRadius:8,overflow:'hidden',border:'1px solid rgba(255,255,255,0.1)'}}>
-            <img src="/assets/photo_personal.jpg" alt="Arpan Kar"
+            <img src="/assets/images/profile/photo_personal.jpg" alt="Arpan Kar"
               style={{width:'100%',height:'auto',display:'block',filter:'grayscale(0.15) contrast(1.05)'}}/>
             <div style={{position:'absolute',inset:0,background:'linear-gradient(to bottom,transparent 60%,rgba(8,8,8,0.7) 100%)',pointerEvents:'none'}}/>
             {(['tl','tr','bl','br'] as const).map(c=><div key={c} className={`hud-corner ${c}`} style={{position:'absolute'}}/>)}

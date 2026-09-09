@@ -1,4 +1,7 @@
+'use client';
+
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { apiBaseUrl } from '../lib/runtime-config';
 
 // ─── Types ────────────────────────────────────────────────────────────────
 interface LogEntry {
@@ -114,7 +117,7 @@ function LoginScreen({ onLogin }: { onLogin: (token: string) => void }) {
     e.preventDefault();
     setError(''); setLoading(true);
     try {
-      const res  = await fetch('/api/login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ username, password }) });
+      const res  = await fetch(`${apiBaseUrl}/login`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ username, password }) });
       const data = await res.json();
       if (data.ok) { sessionStorage.setItem('ep_token', data.token); onLogin(data.token); }
       else setError('ACCESS DENIED — INVALID CREDENTIALS');
@@ -177,7 +180,7 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
   const fetchLogs = useCallback(async () => {
     setLoading(true);
     try {
-      const res  = await fetch('/api/logs', { headers:{ Authorization: token } });
+      const res  = await fetch(`${apiBaseUrl}/logs`, { headers:{ Authorization: `Bearer ${token}` } });
       const data = await res.json();
       if (data.ok) setLogs(data.logs);
       else setError('Failed to fetch logs');
@@ -192,7 +195,7 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
 
   const deleteLog = async (id: number) => {
     setDeleting(id);
-    await fetch(`/api/logs/${id}`, { method:'DELETE', headers:{ Authorization: token } });
+    await fetch(`${apiBaseUrl}/logs/${id}`, { method:'DELETE', headers:{ Authorization: `Bearer ${token}` } });
     setLogs(l => l.filter(x => x.id !== id));
     setDeleting(null);
   };
@@ -310,8 +313,14 @@ function Dashboard({ token, onLogout }: { token: string; onLogout: () => void })
 
 // ─── Main Export ───────────────────────────────────────────────────────────
 export default function AdminPage() {
-  const [token, setToken] = useState<string | null>(() => sessionStorage.getItem('ep_token'));
+  const [token, setToken] = useState<string | null>(null);
+  const [sessionReady, setSessionReady] = useState(false);
+  useEffect(() => {
+    setToken(sessionStorage.getItem('ep_token'));
+    setSessionReady(true);
+  }, []);
   const handleLogout = () => { sessionStorage.removeItem('ep_token'); setToken(null); };
+  if (!sessionReady) return null;
   if (!token) return <LoginScreen onLogin={setToken} />;
   return <Dashboard token={token} onLogout={handleLogout} />;
 }
