@@ -1,0 +1,16 @@
+{
+  "name": "Arpan Kar — ElectroPool",
+  "short_name": "ElectroPool",
+  "description": "Personal portfolio of Arpan Kar.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#080808",
+  "theme_color": "#080808",
+  "icons": [
+    {
+      "src": "/assets/images/site/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

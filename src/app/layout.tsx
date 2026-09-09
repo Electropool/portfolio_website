@@ -1,12 +1,13 @@
-import type { Metadata } from 'next'
 import '../index.css'
+import { siteMetadata } from '../config/siteMetadata'
 
-export const metadata: Metadata = {
-  title: 'Arpan Kar — Portfolio',
-  description: 'ElectroPool portfolio',
-}
+export const metadata = siteMetadata
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode
+}>) {
   return (
     <html lang="en">
       <body>{children}</body>
