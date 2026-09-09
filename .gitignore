@@ -1,8 +1,39 @@
-node_modules
-dist
-dist-ssr
+# NODE
+node_modules/
+
+# NEXT
+.next/
+
+# TS
+*.tsbuildinfo
+
+# Dist
+dist/
+dist-ssr/
 *.local
+
+# ENV
 .env
 .env.local
+
+# DS
 .DS_Store
+
+# Database
 visitor_logs.db
+
+# Data
+data/
+
+# Logs
+logs/*
+!logs/.gitkeep
+
+# PM2
+*.cjs
+.pm2/
+
+# Webserver
+deploy/
+nginx/*
+

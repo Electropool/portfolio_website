@@ -1,318 +1,41 @@
-# ⚡ Electropool Portfolio — Arpan Kar
+# Electropool Portfolio
 
-> Personal portfolio website with integrated visitor tracking and admin dashboard.
-> Live at: **https://electropool.online**
+Personal portfolio site maintained by Electropool. It uses Next.js, SQLite visitor analytics, and a protected admin dashboard.
 
----
-
-## 🔐 Admin Panel
-
-Access the admin panel at:
-- `https://electropool.online/admin`
-- `https://electropool.online/login`
-
-The admin dashboard shows:
-- Visitor IP address
-- City, State, Country (auto-detected via geolocation)
-- Device type (Desktop / Mobile / Tablet)
-- Browser name and version
-- Operating System
-- Date and Time in **IST (Indian Standard Time)**
-
-> ⚠️ **Note:** Visitor tracking only works in production (live server). It will NOT track on `localhost` because the backend API (`/api/track`) is only available when running `node server.js`, not during `npm run dev`.
-
----
-
-## 💻 1. Run on Localhost (Development)
-
-### Install dependencies
+## Local development
 
 ```bash
 npm install
-```
-
-### Start dev server
-
-```bash
 npm run dev
 ```
 
-Access at: **http://localhost:5173**
+The development server uses `http://127.0.0.1:3001`.
 
-> 🔴 **Admin panel & visitor tracking will NOT work in dev mode.** These require the backend (`node server.js`) and a built `dist/` folder.
+## Production
 
----
+1. Copy `.env.example` to `.env` and set unique admin credentials plus a 32+ character `ADMIN_SESSION_SECRET`.
+2. Build the app: `npm run build`.
+3. Start it with PM2:
 
-## 🏗️ 2. Build for Production
+   ```bash
+   PM2_HOME="$PWD/.pm2" pm2 startOrReload ecosystem.config.cjs --only electropool-portfolio
+   PM2_HOME="$PWD/.pm2" pm2 save
+   ```
 
-Run this whenever you update the site:
+The server binds only to `127.0.0.1:3001`; it must be placed behind the included Nginx proxy. Application and PM2 logs are written to `logs/`, while SQLite data defaults to `data/`. Neither directory is tracked by Git.
 
-```bash
-npm run build
-```
+## Nginx and TLS
 
-This creates the `dist/` folder which the backend serves.
+The deployment-ready block is [deploy/nginx/electropool.online.conf](deploy/nginx/electropool.online.conf). It redirects HTTP to HTTPS, terminates the existing Let's Encrypt certificate, adds browser security headers, and proxies to port 3001.
 
----
-
-## 🖥️ 3. Normal VPS Hosting (Nginx — Only if ports 80/443 are free)
-
-> ⚠️ **SKIP THIS** if you are using Cloudflare Tunnel (Section 4 below).
-
-### Move files
+Install it only after confirming the certificate paths:
 
 ```bash
-sudo mkdir -p /var/www/portfolio_website
-sudo cp -r dist/* /var/www/portfolio_website/
+sudo install -m 644 deploy/nginx/electropool.online.conf /etc/nginx/sites-available/electropool.online.conf
+sudo ln -s /etc/nginx/sites-available/electropool.online.conf /etc/nginx/sites-enabled/electropool.online.conf
+sudo nginx -t && sudo systemctl reload nginx
 ```
 
-### Nginx config
+## Admin
 
-```nginx
-server {
-    listen 80;
-    server_name electropool.online www.electropool.online;
-
-    root /var/www/portfolio_website;
-    index index.html;
-
-    location /api {
-        proxy_pass http://localhost:4173;
-        proxy_http_version 1.1;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header Host $host;
-    }
-
-    location / {
-        try_files $uri $uri/ /index.html;
-    }
-}
-```
-
-### Restart nginx
-
-```bash
-sudo systemctl restart nginx
-```
-
----
-
-## ☁️ 4. VPS + Cloudflare Tunnel (CURRENT SETUP ✅)
-
-> ✅ Use this when ports 80/443 are NOT available.
-> ✅ This is the method currently running on the Oracle VPS.
-
-### Step 1 — Upload project to VPS
-
-```bash
-# On your local machine, from the project folder:
-scp -r . user@your-vps-ip:/var/www/portfolio_website/
-```
-
-Or use `git`:
-```bash
-# On VPS
-cd /var/www/portfolio_website
-git pull
-```
-
-### Step 2 — Install Node.js on VPS (if not done)
-
-```bash
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt-get install -y nodejs
-```
-
-### Step 3 — Install dependencies and build
-
-```bash
-cd /var/www/portfolio_website
-npm install
-npm run build
-```
-
-### Step 4 — Run the backend server
-
-Instead of `npx serve`, now run:
-
-```bash
-node server.js
-```
-
-This starts the portfolio website + admin backend together on port **4173**.
-
----
-
-### Step 5 — Cloudflare Tunnel Setup (one-time)
-
-#### Login to Cloudflare
-
-```bash
-cloudflared tunnel login
-```
-
-#### Create tunnel
-
-```bash
-cloudflared tunnel create electropool
-```
-
-#### Config file
-
-Location: `/root/.cloudflared/config.yml`
-
-```yaml
-tunnel: electropool
-credentials-file: /root/.cloudflared/<tunnel-id>.json
-
-ingress:
-  - hostname: electropool.online
-    service: http://localhost:4173
-  - hostname: www.electropool.online
-    service: http://localhost:4173
-  - service: http_status:404
-```
-
-> Replace `<tunnel-id>` with the UUID shown after `cloudflared tunnel create`.
-
-#### Route DNS
-
-```bash
-cloudflared tunnel route dns electropool electropool.online
-cloudflared tunnel route dns electropool www.electropool.online
-```
-
-#### Run tunnel
-
-```bash
-cloudflared tunnel run electropool
-```
-
----
-
-## 🔄 5. Auto-Start on VPS (Run 24/7)
-
-### Portfolio backend service
-
-```bash
-sudo nano /etc/systemd/system/portfolio.service
-```
-
-Paste:
-
-```ini
-[Unit]
-Description=Electropool Portfolio Backend
-After=network.target
-
-[Service]
-Type=simple
-User=root
-WorkingDirectory=/var/www/portfolio_website
-ExecStart=/usr/bin/node /var/www/portfolio_website/server.js
-Restart=on-failure
-RestartSec=5
-
-[Install]
-WantedBy=multi-user.target
-```
-
-### Cloudflare Tunnel service
-
-```bash
-sudo nano /etc/systemd/system/cloudflared.service
-```
-
-Paste:
-
-```ini
-[Unit]
-Description=Cloudflare Tunnel
-After=network.target
-
-[Service]
-Type=simple
-User=root
-ExecStart=/usr/bin/cloudflared tunnel run electropool
-Restart=on-failure
-RestartSec=5
-
-[Install]
-WantedBy=multi-user.target
-```
-
-### Enable and start both
-
-```bash
-sudo systemctl daemon-reload
-sudo systemctl enable portfolio cloudflared
-sudo systemctl start portfolio cloudflared
-```
-
-### Check status
-
-```bash
-sudo systemctl status portfolio
-sudo systemctl status cloudflared
-```
-
----
-
-## 🔁 6. Updating the Website (IMPORTANT)
-
-Whenever you make changes to the site on your local machine:
-
-```bash
-# Local: build first
-npm run build
-
-# Then upload to VPS (or use git pull on VPS)
-scp -r dist/ user@your-vps-ip:/var/www/portfolio_website/
-# OR on VPS:
-# cd /var/www/portfolio_website && git pull && npm run build
-
-# Restart the portfolio service
-sudo systemctl restart portfolio
-```
-
-> ✅ No need to restart Cloudflare Tunnel — it keeps running automatically.
-
----
-
-## 📁 Project Structure
-
-```
-portfolio_v6/
-├── dist/                   # Built production files (auto-generated)
-├── public/assets/          # Static images, audio, etc.
-├── src/
-│   ├── components/         # Reusable UI components
-│   ├── pages/
-│   │   ├── AdminPage.tsx   # 🔒 Admin login + visitor log dashboard
-│   │   └── SinglePage.tsx  # Main portfolio page
-│   ├── App.tsx             # Root app component (includes tracking)
-│   └── main.tsx            # Router setup (/admin, /login, /)
-├── server.js               # 🚀 Express backend (API + static serving)
-├── visitor_logs.db         # SQLite database (auto-created on first run)
-└── package.json
-```
-
----
-
-## 🌐 Live URLs
-
-| URL | Purpose |
-|-----|---------|
-| `https://electropool.online` | Main portfolio |
-| `https://electropool.online/admin` | Admin dashboard |
-| `https://electropool.online/login` | Same admin login |
-
----
-
-## 🔮 Future Additions
-
-- Image upload from admin panel
-- Music track management
-- Admin credential change UI
-- Export visitor logs as CSV
+Use `/admin` or `/login`. Successful and failed auth activity, visitor record outcomes, admin-log access, and backend failures are recorded as structured JSON lines in `logs/application.log`; credentials, session tokens, and visitor IPs are never written there.
