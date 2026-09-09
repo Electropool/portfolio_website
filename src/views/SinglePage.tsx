@@ -81,7 +81,7 @@ function HeroSection({ playSfx }: { playSfx: (type: any) => void }) {
       {/* Background photo — B&W blurred left */}
       <motion.div style={{ position:'absolute', inset:0, zIndex:0, scale: photoScale, opacity: photoOpacity }}>
         <div style={{ position:'absolute', left:0, top:0, width:'55%', height:'100%', overflow:'hidden' }}>
-          <img src="/assets/images/profile/photo_new.png" alt=""
+          <img src="/assets/images/profile/photo_new.jpg" alt=""
             style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'center top',
               filter:'grayscale(1) brightness(0.28) blur(1.5px)',
               maskImage:'linear-gradient(to right, rgba(0,0,0,0.7) 0%, transparent 100%)',
